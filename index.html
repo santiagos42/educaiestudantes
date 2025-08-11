@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Plataforma MGQ</title>
+
+    <!-- Carregando bibliotecas externas de um CDN (Rede de Distribuição de Conteúdo) -->
+    <!-- Isso é mais simples do que gerenciá-las com npm para este caso de uso. -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.2.67/pdf.min.mjs" type="module"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+  </head>
+
+  <!--
+    Adicionamos as classes do Tailwind diretamente aqui.
+    - bg-slate-50: Fundo claro padrão.
+    - dark:bg-slate-900: Fundo escuro quando a classe 'dark' está presente.
+    - text-gray-800: Cor do texto padrão no modo claro.
+    - dark:text-gray-200: Cor do texto padrão no modo escuro.
+  -->
+  <body class="bg-slate-50 dark:bg-slate-900 text-gray-800 dark:text-gray-200">
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

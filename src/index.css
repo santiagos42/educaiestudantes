@@ -1,0 +1,48 @@
+/* --- 1. Importação das Fontes do Google --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap');
+
+/* --- 2. Diretivas do Tailwind --- */
+/* Estas linhas são substituídas pelo Tailwind com todo o CSS necessário. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* --- 3. Estilos Customizados Adicionais --- */
+/* Aqui você pode adicionar classes que não são de utilitário ou que são muito complexas. */
+
+.font-open-sans { 
+  font-family: 'Open Sans', 'sans-serif'; 
+}
+
+/* Regra para mostrar o ícone de lixeira apenas no hover */
+.question-nav-item .delete-icon { 
+  visibility: hidden; 
+  opacity: 0; 
+  transition: visibility 0s, opacity 0.2s linear; 
+}
+.question-nav-item:hover .delete-icon { 
+  visibility: visible; 
+  opacity: 1; 
+}
+
+/* Estilos para o conteúdo gerado na modal "Aprofundar" (classe 'prose') */
+.deepen-content h1, 
+.deepen-content h2, 
+.deepen-content h3 { 
+  background: -webkit-linear-gradient(45deg, #3b82f6, #a855f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Estiliza a tag <strong> dentro do 'deepen-content' de acordo com o tema */
+.dark .deepen-content strong { 
+  color: #93c5fd; /* Azul claro no modo escuro */
+}
+/* No tema claro, a cor do 'strong' será a padrão do plugin 'typography', que já é boa. */
+/* Mantemos essa regra aqui caso queira personalizar no futuro. */
+.light .deepen-content strong { 
+  color: #1d4ed8; /* Azul escuro no modo claro */
+}
