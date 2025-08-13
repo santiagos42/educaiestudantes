@@ -579,7 +579,7 @@ const WelcomeScreen = ({ onStart, onShowFeatures }) => {
         </div>
       </div>
       <footer className="absolute bottom-4 left-1/2 -translate-x-1/2 text-sm text-white/60 z-20">
-        Desenvolvido por Prof. Juan Santiago (2025)
+        Desenvolvido por EducAI - Soluções Inteligentes em Educação (2025)
       </footer>
     </div>
   );
@@ -2279,9 +2279,9 @@ const response = await fetch('/api/generateQuiz', {
       
       let basePrompt;
       if (instructions) {
-        basePrompt = `Você é um especialista em criação de quizzes. Usando o texto de referência fornecido, sua principal tarefa é seguir estas instruções específicas para criar ${batchCount} questões: "${instructions}". O texto de referência é: "${formattedContent}".`;
+        basePrompt = `Você é um professor especialista em criar listas de questões avaliativas que testam o conhecimento de estudantes universitários. Usando o texto de referência fornecido, sua principal tarefa é seguir estas instruções específicas para criar uma lista de questões com ${batchCount} questões: "${instructions}". O texto de referência é: "${formattedContent}".`;
       } else {
-        basePrompt = `Você é um especialista em criação de quizzes. Baseado no seguinte tópico ou texto, crie um quiz com ${batchCount} questões: "${formattedContent}".`;
+        basePrompt = `Você é um professor especialista em criar listas de questões avaliativas que testam o conhecimento de estudantes universitários. Baseado no seguinte tópico ou texto, crie uma lista de questões com ${batchCount} questões: "${formattedContent}".`;
       }
       if (allKnownQuestions.length > 0) {
         const existingQuestionsSummary = allKnownQuestions.map(q => q.question).join('; ');

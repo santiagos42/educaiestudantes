@@ -35,7 +35,7 @@ async function handler(req, res) {
     res.end(JSON.stringify({ error: 'Chave da API não configurada no servidor.' }))
     return
   }
-  const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+  const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
   const payload = {
     contents: [{ role: 'user', parts: [{ text: prompt }] }],
     ...(schema && {
@@ -56,9 +56,9 @@ async function handler(req, res) {
     const responseBodyText = await geminiResponse.text();
     // Log detalhado no terminal (onde 'npm run dev' está rodando) para depuração
     console.log("\n--- RESPOSTA DA API GEMINI RECEBIDA NO BACKEND ---")
-    console.log("Status da Resposta:", geminiResponse.status, geminiResponse.statusText)
-    console.log("Corpo da Resposta (texto):", responseBodyText)
-    console.log("---------------------------------------------------\n")
+    //console.log("Status da Resposta:", geminiResponse.status, geminiResponse.statusText)
+    // console.log("Corpo da Resposta (texto):", responseBodyText)
+    //console.log("---------------------------------------------------\n")
     // Define o status e o cabeçalho da nossa resposta para o frontend
     res.statusCode = geminiResponse.status
     res.setHeader('Content-Type', 'application/json')
