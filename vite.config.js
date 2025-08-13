@@ -1,6 +1,6 @@
 import { defineConfig, loadEnv } from 'vite' // 1. Importe 'loadEnv'
 import react from '@vitejs/plugin-react'
-import { handler as apiHandler } from './api/generateQuiz.js'
+import apiHandler from './api/generateQuiz.js'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => { // 2. Mude a exportação para uma função

@@ -2091,12 +2091,140 @@ export default function App() {
     return '';
   };
   
+// Inserir a função fetchWithRetry aqui
+const fetchWithRetry = async (url, options, maxRetries = 3, initialDelay = 1000) => {
+  let retryCount = 0;
+  let delay = initialDelay;
+  
+  while (retryCount < maxRetries) {
+    try {
+      const response = await fetch(url, options);
+      
+      // Se não for erro 503, retorna a resposta
+      if (response.status !== 503) {
+        return response;
+      }
+      
+      // Se for 503, incrementa contador e espera
+      retryCount++;
+      console.log(`Tentativa ${retryCount} de ${maxRetries}. Aguardando ${delay}ms...`);
+      await new Promise(resolve => setTimeout(resolve, delay));
+      delay *= 2; // Backoff exponencial
+      
+    } catch (error) {
+      // Se for erro de rede, também tenta novamente
+      retryCount++;
+      console.log(`Erro de rede na tentativa ${retryCount} de ${maxRetries}. Aguardando ${delay}ms...`);
+      await new Promise(resolve => setTimeout(resolve, delay));
+      delay *= 2;
+    }
+  }
+  
+  // Se esgotou as tentativas, retorna a última resposta
+  return fetch(url, options);
+};
+
   const callApiSecurely = async (prompt, schema) => {
-    const response = await fetch('/api/generateQuiz', {
+    // Inserir a função fetchWithRetry aqui
+const fetchWithRetry = async (url, options, maxRetries = 3, initialDelay = 1000) => {
+  let retryCount = 0;
+  let delay = initialDelay;
+  
+  while (retryCount < maxRetries) {
+    try {
+      const response = await fetch(url, options);
+      
+      // Se não for erro 503, retorna a resposta
+      if (response.status !== 503) {
+        return response;
+      }
+      
+      // Se for 503, incrementa contador e espera
+      retryCount++;
+      console.log(`Tentativa ${retryCount} de ${maxRetries}. Aguardando ${delay}ms...`);
+      await new Promise(resolve => setTimeout(resolve, delay));
+      delay *= 2; // Backoff exponencial
+      
+    } catch (error) {
+      // Se for erro de rede, também tenta novamente
+      retryCount++;
+      console.log(`Erro de rede na tentativa ${retryCount} de ${maxRetries}. Aguardando ${delay}ms...`);
+      await new Promise(resolve => setTimeout(resolve, delay));
+      delay *= 2;
+    }
+  }
+  
+  // Se esgotou as tentativas, retorna a última resposta
+  return fetch(url, options);
+};
+
+const callApiSecurely = async (prompt, schema) => {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 9000); // 9 segundos (menos que 10s da Vercel)
+  
+  try {
+    const response = await fetchWithRetry('/api/generateQuiz', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify({ prompt, schema }),
+        signal: controller.signal
+    }, 3, 1000); // 3 tentativas com 1 segundo de delay inicial
+    
+    clearTimeout(timeoutId);
+    
+    if (!response.ok) {
+        const errorBody = await response.text();
+        console.error("API Error Body:", errorBody);
+        let errorJson;
+        try {
+            errorJson = JSON.parse(errorBody);
+        } catch(e) {
+            throw new Error(`A chamada à API falhou: ${response.status} - ${errorBody}`);
+        }
+        
+        // Melhor tratamento do erro 503
+        if (response.status === 503) {
+          throw new Error("O serviço está temporariamente sobrecarregado. Por favor, tente novamente em alguns minutos.");
+        }
+        
+        const blockReason = errorJson.details?.promptFeedback?.blockReason || "Motivo desconhecido";
+        if (errorJson.details?.promptFeedback?.blockReason) {
+             throw new Error(`A geração de conteúdo foi bloqueada. Motivo: ${blockReason}.`);
+        }
+        throw new Error(errorJson.error || `A chamada à API falhou: ${response.status}.`);
+    }
+    
+    const result = await response.json();
+    
+    if (!result.candidates || result.candidates.length === 0) {
+        throw new Error("A API não retornou candidatos válidos.");
+    }
+    const textResponse = result.candidates[0]?.content?.parts?.[0]?.text;
+    if (!textResponse) { 
+        throw new Error("A API retornou uma resposta vazia ou em formato inválido."); 
+    }
+    try {
+        return JSON.parse(textResponse);
+    } catch (e) {
+        console.error("Falha ao analisar JSON da API:", textResponse);
+        throw new Error("Erro ao analisar a resposta do servidor.");
+    }
+  } catch (error) {
+    clearTimeout(timeoutId);
+    if (error.name === 'AbortError') {
+      throw new Error("A requisição excedeu o tempo limite. Por favor, tente novamente.");
+    }
+    throw error;
+  }
+};
+
+const response = await fetch('/api/generateQuiz', {
+    method: 'POST',
+    headers: { 
+      'Content-Type': 'application/json',
+    },
         body: JSON.stringify({ prompt, schema })
     });
     
